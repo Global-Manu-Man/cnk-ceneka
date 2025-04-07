@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Login</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <div style="max-width: 400px; margin: 40px auto; padding: 20px;">
+        <h2>Login para obtener token</h2>
+        <div style="margin: 20px 0;">
+            <input type="email" id="email" placeholder="Email" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+            <input type="password" id="password" placeholder="Password" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+            <button onclick="login()" style="width: 100%; padding: 8px; background: #4CAF50; color: white; border: none; cursor: pointer;">
+                Login
+            </button>
+        </div>
+        <div>
+            <h3>Tu token:</h3>
+            <textarea id="token" readonly style="width: 100%; height: 100px; margin-top: 10px;"></textarea>
+            <button onclick="copyToken()" style="margin-top: 10px; padding: 8px; background: #2196F3; color: white; border: none; cursor: pointer;">
+                Copiar Token
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfauXsx1XKHY4_lzW8WCbiDwAFGFGLGtc",
+            authDomain: "login-7a034.firebaseapp.com",
+            projectId: "login-7a034",
+            storageBucket: "login-7a034.firebasestorage.app",
+            messagingSenderId: "912722547190",
+            appId: "1:912722547190:web:140f991f04243d1318f7d7"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const result = await firebase.auth().signInWithEmailAndPassword(email, password);
+                const token = await result.user.getIdToken();
+                const uid = result.user.uid;
+                document.getElementById('token').value = token;
+                console.log('UID del usuario:', uid); // Muestra el UID en la consola
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        function copyToken() {
+            const tokenElement = document.getElementById('token');
+            tokenElement.select();
+            document.execCommand('copy');
+            alert('Token copiado al portapapeles');
+        }
+    </script>
+</body>
+</html>

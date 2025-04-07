@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id                Int               @id @default(autoincrement())
+  client           String            @db.VarChar(100)
+  property_code    String            @db.VarChar(50)
+  property_type_id Int
+  sale_type_id     Int
+  legal_status_id  Int
+  sale_value       Decimal           @db.Decimal(15, 2)
+  commercial_value Decimal           @db.Decimal(15, 2)
+  street           String            @db.VarChar(100)
+  exterior_number  String            @db.VarChar(20)
+  interior_number  String?           @db.VarChar(20)
+  postal_code      String            @db.VarChar(10)
+  extra_address    String?           @db.Text
+  observation_id   Int?
+  land_size        Decimal           @db.Decimal(10, 2)
+  construction_size Decimal          @db.Decimal(10, 2)
+  bedrooms         Int
+  bathrooms        Int
+  parking_spaces   Int
+  has_garden       Boolean           @default(false)
+  has_study        Boolean           @default(false)
+  has_service_room Boolean           @default(false)
+  is_condominium   Boolean           @default(false)
+  additional_info  String?           @db.Text
+  title            String            @db.VarChar(255)
+  description      String            @db.Text
+  main_image       String            @db.Text
+  state_id         Int
+  municipality_id  Int
+  colony_id        Int
+  created_at       DateTime          @default(now())
+  updated_at       DateTime          @updatedAt
+  deleted_at       DateTime?
+
+  // Relations
+  state           State             @relation(fields: [state_id], references: [id])
+  municipality    Municipality      @relation(fields: [municipality_id], references: [id])
+  colony          Colony            @relation(fields: [colony_id], references: [id])
+  property_type   PropertyType      @relation(fields: [property_type_id], references: [id])
+  sale_type       SaleType         @relation(fields: [sale_type_id], references: [id])
+  legal_status    LegalStatus      @relation(fields: [legal_status_id], references: [id])
+  observation     Observation?      @relation(fields: [observation_id], references: [id])
+  images          PropertyImage[]
+  features        PropertyFeature[]
+
+  @@map("properties")
+}
+
+model PropertyImage {
+  id          Int      @id @default(autoincrement())
+  property_id Int
+  image_url   String   @db.Text
+  created_at  DateTime @default(now())
+  property    Property @relation(fields: [property_id], references: [id])
+
+  @@map("property_images")
+}
+
+model PropertyFeature {
+  id          Int      @id @default(autoincrement())
+  property_id Int
+  feature     String   @db.VarChar(255)
+  created_at  DateTime @default(now())
+  property    Property @relation(fields: [property_id], references: [id])
+
+  @@map("property_features")
+}
+
+model State {
+  id            Int            @id @default(autoincrement())
+  name          String         @db.VarChar(100)
+  properties    Property[]
+  municipalities Municipality[]
+
+  @@map("states")
+}
+
+model Municipality {
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(100)
+  state_id   Int
+  state      State      @relation(fields: [state_id], references: [id])
+  properties Property[]
+  colonies   Colony[]
+
+  @@map("municipalities")
+}
+
+model Colony {
+  id              Int          @id @default(autoincrement())
+  name            String       @db.VarChar(100)
+  municipality_id Int
+  municipality    Municipality @relation(fields: [municipality_id], references: [id])
+  properties      Property[]
+
+  @@map("colonies")
+}
+
+model SaleType {
+  id          Int        @id @default(autoincrement())
+  description String     @db.VarChar(255)
+  properties  Property[]
+
+  @@map("sale_type")
+}
+
+model LegalStatus {
+  id          Int        @id @default(autoincrement())
+  description String     @db.VarChar(255)
+  properties  Property[]
+
+  @@map("legal_status")
+}
+
+model PropertyType {
+  id          Int        @id @default(autoincrement())
+  description String     @db.VarChar(255)
+  properties  Property[]
+
+  @@map("property_type")
+}
+
+model Observation {
+  id          Int        @id @default(autoincrement())
+  description String     @db.VarChar(255)
+  properties  Property[]
+
+  @@map("observations")
+}

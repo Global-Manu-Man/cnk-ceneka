@@ -1,0 +1,111 @@
+{
+  "info": {
+    "_postman_id": "1234567-89ab-cdef-0123-456789abcdef",
+    "name": "Real Estate API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "Get All Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/properties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Property by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Property",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{firebaseToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client\": \"John Doe\",\n  \"property_code\": \"PROP001\",\n  \"property_type_id\": 1,\n  \"sale_type_id\": 1,\n  \"legal_status_id\": 1,\n  \"sale_value\": 1000000.00,\n  \"commercial_value\": 1200000.00,\n  \"street\": \"Main Street\",\n  \"exterior_number\": \"123\",\n  \"postal_code\": \"12345\",\n  \"land_size\": 200.00,\n  \"construction_size\": 150.00,\n  \"bedrooms\": 3,\n  \"bathrooms\": 2,\n  \"parking_spaces\": 2,\n  \"has_garden\": true,\n  \"has_study\": false,\n  \"has_service_room\": false,\n  \"is_condominium\": false,\n  \"title\": \"Beautiful House in Main Street\",\n  \"description\": \"Spacious house with great location\",\n  \"main_image\": \"https://example.com/image.jpg\",\n  \"state_id\": 1,\n  \"municipality_id\": 1,\n  \"colony_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/properties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "firebaseToken",
+      "value": "YOUR_FIREBASE_TOKEN",
+      "type": "string"
+    }
+  ]
+}

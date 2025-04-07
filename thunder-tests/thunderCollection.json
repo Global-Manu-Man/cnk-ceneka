@@ -1,0 +1,68 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "Real Estate API",
+  "dateExported": "2024-04-05T18:00:00.000Z",
+  "version": "1.1",
+  "folders": [],
+  "requests": [
+    {
+      "name": "Get All Properties",
+      "url": "http://localhost:3000/api/properties",
+      "method": "GET",
+      "headers": [],
+      "params": [],
+      "tests": []
+    },
+    {
+      "name": "Get Property By ID",
+      "url": "http://localhost:3000/api/properties/1",
+      "method": "GET",
+      "headers": [],
+      "params": [],
+      "tests": []
+    },
+    {
+      "name": "Create Property",
+      "url": "http://localhost:3000/api/properties",
+      "method": "POST",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer YOUR_FIREBASE_TOKEN"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "client": "John Doe",
+        "property_code": "PROP001",
+        "property_type_id": 1,
+        "sale_type_id": 1,
+        "legal_status_id": 1,
+        "sale_value": 1000000.00,
+        "commercial_value": 1200000.00,
+        "street": "Main Street",
+        "exterior_number": "123",
+        "postal_code": "12345",
+        "land_size": 200.00,
+        "construction_size": 150.00,
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "parking_spaces": 2,
+        "has_garden": true,
+        "has_study": false,
+        "has_service_room": false,
+        "is_condominium": false,
+        "title": "Beautiful House in Main Street",
+        "description": "Spacious house with great location",
+        "main_image": "https://example.com/image.jpg",
+        "state_id": 1,
+        "municipality_id": 1,
+        "colony_id": 1
+      },
+      "tests": []
+    }
+  ]
+}
