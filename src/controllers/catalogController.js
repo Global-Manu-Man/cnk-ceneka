@@ -323,6 +323,115 @@ const createState = async (req, res, next) => {
       next(new ApiError(500, 'Error al eliminar colonia'));
     }
   };
+
+  const createFeatures = async (req, res, next) => {
+    try {
+      const { property_id, features } = req.body;
+  
+      // Validar que property_id exista
+      if (!property_id || (!Array.isArray(features) && typeof features !== 'string')) {
+        return res.status(400).json({
+          success: false,
+          message: 'Datos inválidos'
+        });
+      }
+  
+      // Verificar si la propiedad existe
+      const [propCheck] = await pool.query(
+        'SELECT id FROM properties WHERE id = ?',
+        [property_id]
+      );
+  
+      if (propCheck.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: `La propiedad con ID ${property_id} no existe`
+        });
+      }
+  
+      // Convertir string en array si es necesario
+      const featureList = Array.isArray(features) ? features : [features];
+  
+      // 🧽 Eliminar características anteriores si las hay (opcional)
+      await pool.query('DELETE FROM property_features WHERE property_id = ?', [property_id]);
+  
+      // Insertar nuevas características
+      const values = featureList.map(feature => [property_id, feature]);
+      await pool.query('INSERT INTO property_features (property_id, feature) VALUES ?', [values]);
+  
+      return res.status(201).json({
+        success: true,
+        message: 'Características agregadas correctamente'
+      });
+  
+    } catch (error) {
+      logger.error(`Error al crear características: ${error.message}`);
+      next(new ApiError(500, 'Error al crear características'));
+    }
+  };
+  
+  
+  const getFeaturesByPropertyId = async (req, res, next) => {
+    try {
+      const propertyId = req.params.id;
+  
+      const [features] = await pool.query(
+        'SELECT id, feature FROM property_features WHERE property_id = ?',
+        [propertyId]
+      );
+  
+      res.status(200).json({ success: true, data: features });
+    } catch (error) {
+      logger.error(`Error al consultar características: ${error.message}`);
+      next(new ApiError(500, 'Error al consultar características'));
+    }
+  };
+  
+  const updateFeature = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { feature } = req.body;
+  
+      await pool.query('UPDATE property_features SET feature = ? WHERE id = ?', [feature, id]);
+  
+      res.status(200).json({ success: true, message: 'Característica actualizada correctamente' });
+    } catch (error) {
+      logger.error(`Error al actualizar característica: ${error.message}`);
+      next(new ApiError(500, 'Error al actualizar característica'));
+    }
+  };
+
+  const deleteFeature = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+  
+      await pool.query('DELETE FROM property_features WHERE id = ?', [id]);
+  
+      res.status(200).json({ success: true, message: 'Característica eliminada correctamente' });
+    } catch (error) {
+      logger.error(`Error al eliminar característica: ${error.message}`);
+      next(new ApiError(500, 'Error al eliminar característica'));
+    }
+  };
+
+  const getAllFeatures = async (req, res, next) => {
+    try {
+      const [features] = await pool.query(
+        'SELECT id, property_id, feature FROM property_features ORDER BY id ASC'
+      );
+  
+      res.status(200).json({
+        success: true,
+        data: features
+      });
+    } catch (error) {
+      logger.error(`Error al obtener todas las características: ${error.message}`);
+      next(new ApiError(500, 'Error al obtener características'));
+    }
+  };
+  
+  
+  
   
 
 module.exports = {
@@ -351,5 +460,10 @@ module.exports = {
   deleteMunicipality,
   createColony,
   updateColony,
-  deleteColony
+  deleteColony,
+  createFeatures,
+  getAllFeatures,
+  getFeaturesByPropertyId,
+  updateFeature,
+  deleteFeature
 };

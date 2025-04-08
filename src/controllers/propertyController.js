@@ -107,17 +107,14 @@ const validateAndTransformPropertyData = (data) => {
 
 const getAllProperties = async (req, res, next) => {
   try {
-    // Parámetros de paginación
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
-    // 1. Obtener total de registros
     const [countResult] = await pool.query('SELECT COUNT(*) AS total FROM properties');
     const total = countResult[0].total;
     const totalPages = Math.ceil(total / limit);
 
-    // 2. Obtener propiedades paginadas
     const [properties] = await pool.query(
       `SELECT 
         id, client, property_code, property_type_id, sale_type_id, legal_status_id,
@@ -132,7 +129,6 @@ const getAllProperties = async (req, res, next) => {
       [limit, offset]
     );
 
-    // 3. Si no hay resultados
     if (!properties.length) {
       return res.status(200).json({
         success: true,
@@ -147,11 +143,10 @@ const getAllProperties = async (req, res, next) => {
       });
     }
 
-    // 4. Obtener IDs de propiedades
     const propertyIds = properties.map(p => p.id);
-
-    // 5. Obtener todas las imágenes relacionadas con esas propiedades
     const placeholders = propertyIds.map(() => '?').join(', ');
+
+    // 🔍 Obtener imágenes
     const [imageResults] = await pool.query(
       `SELECT property_id, id AS image_id, image_url 
        FROM property_images 
@@ -159,7 +154,15 @@ const getAllProperties = async (req, res, next) => {
       propertyIds
     );
 
-    // 6. Agrupar imágenes en cada propiedad
+    // 🔍 Obtener features
+    const [featureResults] = await pool.query(
+      `SELECT property_id, feature 
+       FROM property_features 
+       WHERE property_id IN (${placeholders})`,
+      propertyIds
+    );
+
+    // 🧠 Enriquecer propiedades con imágenes y features
     const enrichedProperties = properties.map(property => {
       const images = imageResults
         .filter(img => img.property_id === property.id)
@@ -168,13 +171,17 @@ const getAllProperties = async (req, res, next) => {
           url: img.image_url
         }));
 
+      const features = featureResults
+        .filter(f => f.property_id === property.id)
+        .map(f => f.feature);
+
       return {
         ...property,
-        images
+        images,
+        features
       };
     });
 
-    // 7. Respuesta final
     return res.status(200).json({
       success: true,
       data: enrichedProperties,
@@ -191,6 +198,7 @@ const getAllProperties = async (req, res, next) => {
     next(new ApiError(500, 'Error al obtener las propiedades'));
   }
 };
+
 
 
 
@@ -223,13 +231,26 @@ const getPropertyById = async (req, res, next) => {
       [id]
     );
 
-    const imageList = images.map(img => ({ id: img.image_id, url: img.image_url }));
+    const imageList = images.map(img => ({
+      id: img.image_id,
+      url: img.image_url
+    }));
 
+    // ✅ Obtener features relacionados
+    const [features] = await pool.execute(
+      'SELECT feature FROM property_features WHERE property_id = ?',
+      [id]
+    );
+
+    const featureList = features.map(f => f.feature);
+
+    // Respuesta completa
     res.json({
       success: true,
       data: {
         ...property,
-        images: imageList
+        images: imageList,
+        features: featureList
       }
     });
   } catch (error) {
@@ -237,6 +258,7 @@ const getPropertyById = async (req, res, next) => {
     next(new ApiError(500, 'Error al obtener la propiedad'));
   }
 };
+
 
 
 

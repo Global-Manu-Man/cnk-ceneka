@@ -1498,3 +1498,60 @@
 {"level":"info","message":"Input transformado:","timestamp":"2025-04-08T02:29:09.296Z"}
 {"level":"info","message":"Datos listos para insertar:","timestamp":"2025-04-08T02:29:09.296Z"}
 {"level":"info","message":"::1 - - [08/Apr/2025:02:29:11 +0000] \"POST /api/properties HTTP/1.1\" 201 1511 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T02:29:11.952Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-04-08T02:44:45.464Z"}
+{"level":"info","message":"API Documentation available at http://localhost:3000/api-docs","timestamp":"2025-04-08T02:44:45.466Z"}
+{"level":"info","message":"✅ Conexión exitosa a la base de datos MySQL 🐬\n    - Host: r3nw3.h.filess.io\n    - Puerto: 3307\n    - Usuario: cnkceneka_intogoesso\n    - Base de datos: cnkceneka_intogoesso","timestamp":"2025-04-08T02:44:46.260Z"}
+{"level":"info","message":"📦 Versión del servidor MySQL: 8.0.36-28","timestamp":"2025-04-08T02:44:46.332Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-04-08T02:46:55.892Z"}
+{"level":"info","message":"API Documentation available at http://localhost:3000/api-docs","timestamp":"2025-04-08T02:46:55.895Z"}
+{"level":"info","message":"✅ Conexión exitosa a la base de datos MySQL 🐬\n    - Host: r3nw3.h.filess.io\n    - Puerto: 3307\n    - Usuario: cnkceneka_intogoesso\n    - Base de datos: cnkceneka_intogoesso","timestamp":"2025-04-08T02:46:56.834Z"}
+{"level":"info","message":"📦 Versión del servidor MySQL: 8.0.36-28","timestamp":"2025-04-08T02:46:56.935Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-04-08T02:49:09.042Z"}
+{"level":"info","message":"API Documentation available at http://localhost:3000/api-docs","timestamp":"2025-04-08T02:49:09.045Z"}
+{"level":"info","message":"✅ Conexión exitosa a la base de datos MySQL 🐬\n    - Host: r3nw3.h.filess.io\n    - Puerto: 3307\n    - Usuario: cnkceneka_intogoesso\n    - Base de datos: cnkceneka_intogoesso","timestamp":"2025-04-08T02:49:09.929Z"}
+{"level":"info","message":"📦 Versión del servidor MySQL: 8.0.36-28","timestamp":"2025-04-08T02:49:10.016Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-04-08T02:49:20.473Z"}
+{"level":"info","message":"API Documentation available at http://localhost:3000/api-docs","timestamp":"2025-04-08T02:49:20.475Z"}
+{"level":"info","message":"✅ Conexión exitosa a la base de datos MySQL 🐬\n    - Host: r3nw3.h.filess.io\n    - Puerto: 3307\n    - Usuario: cnkceneka_intogoesso\n    - Base de datos: cnkceneka_intogoesso","timestamp":"2025-04-08T02:49:21.215Z"}
+{"level":"info","message":"📦 Versión del servidor MySQL: 8.0.36-28","timestamp":"2025-04-08T02:49:21.314Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-04-08T02:49:23.948Z"}
+{"level":"info","message":"API Documentation available at http://localhost:3000/api-docs","timestamp":"2025-04-08T02:49:23.951Z"}
+{"level":"info","message":"✅ Conexión exitosa a la base de datos MySQL 🐬\n    - Host: r3nw3.h.filess.io\n    - Puerto: 3307\n    - Usuario: cnkceneka_intogoesso\n    - Base de datos: cnkceneka_intogoesso","timestamp":"2025-04-08T02:49:24.796Z"}
+{"level":"info","message":"📦 Versión del servidor MySQL: 8.0.36-28","timestamp":"2025-04-08T02:49:24.888Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-04-08T02:50:24.837Z"}
+{"level":"info","message":"API Documentation available at http://localhost:3000/api-docs","timestamp":"2025-04-08T02:50:24.839Z"}
+{"level":"info","message":"✅ Conexión exitosa a la base de datos MySQL 🐬\n    - Host: r3nw3.h.filess.io\n    - Puerto: 3307\n    - Usuario: cnkceneka_intogoesso\n    - Base de datos: cnkceneka_intogoesso","timestamp":"2025-04-08T02:50:25.753Z"}
+{"level":"info","message":"📦 Versión del servidor MySQL: 8.0.36-28","timestamp":"2025-04-08T02:50:25.835Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:02:52:15 +0000] \"GET /api/properties/catalogs/features HTTP/1.1\" 200 1079 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T02:52:15.463Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:02:54:20 +0000] \"POST /api/properties/catalogs/features HTTP/1.1\" 401 54 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T02:54:20.052Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:02:54:47 +0000] \"POST /api/properties/catalogs/features HTTP/1.1\" 400 46 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T02:54:47.257Z"}
+{"level":"error","message":"Error al crear características: Cannot add or update a child row: a foreign key constraint fails (`cnkceneka_intogoesso`.`property_features`, CONSTRAINT `property_features_ibfk_1` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`))","timestamp":"2025-04-08T02:57:12.278Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:02:57:12 +0000] \"POST /api/properties/catalogs/features HTTP/1.1\" 500 61 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T02:57:12.279Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:02:57:20 +0000] \"POST /api/properties/catalogs/features HTTP/1.1\" 400 46 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T02:57:20.829Z"}
+{"level":"error","message":"Error al crear características: Cannot add or update a child row: a foreign key constraint fails (`cnkceneka_intogoesso`.`property_features`, CONSTRAINT `property_features_ibfk_1` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`))","timestamp":"2025-04-08T02:58:42.849Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:02:58:42 +0000] \"POST /api/properties/catalogs/features HTTP/1.1\" 500 61 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T02:58:42.850Z"}
+{"level":"error","message":"Error al crear características: Cannot add or update a child row: a foreign key constraint fails (`cnkceneka_intogoesso`.`property_features`, CONSTRAINT `property_features_ibfk_1` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`))","timestamp":"2025-04-08T02:59:19.316Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:02:59:19 +0000] \"POST /api/properties/catalogs/features HTTP/1.1\" 500 61 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T02:59:19.317Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-04-08T03:01:46.105Z"}
+{"level":"info","message":"API Documentation available at http://localhost:3000/api-docs","timestamp":"2025-04-08T03:01:46.108Z"}
+{"level":"info","message":"✅ Conexión exitosa a la base de datos MySQL 🐬\n    - Host: r3nw3.h.filess.io\n    - Puerto: 3307\n    - Usuario: cnkceneka_intogoesso\n    - Base de datos: cnkceneka_intogoesso","timestamp":"2025-04-08T03:01:46.919Z"}
+{"level":"info","message":"📦 Versión del servidor MySQL: 8.0.36-28","timestamp":"2025-04-08T03:01:46.998Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:03:01:54 +0000] \"POST /api/properties/catalogs/features HTTP/1.1\" 404 61 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T03:01:54.662Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:03:02:14 +0000] \"POST /api/properties/catalogs/features HTTP/1.1\" 201 69 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T03:02:14.274Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:03:02:20 +0000] \"GET /api/properties/catalogs/features HTTP/1.1\" 200 597 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T03:02:20.725Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:03:04:31 +0000] \"GET /api/properties?page=1&limit=4 HTTP/1.1\" 200 3009 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T03:04:31.577Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:03:07:55 +0000] \"GET /api/properties?page=1&limit=4 HTTP/1.1\" 200 3009 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T03:07:55.666Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:03:08:24 +0000] \"GET /api/properties/18 HTTP/1.1\" 200 1488 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T03:08:24.551Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-04-08T03:12:42.321Z"}
+{"level":"info","message":"API Documentation available at http://localhost:3000/api-docs","timestamp":"2025-04-08T03:12:42.324Z"}
+{"level":"info","message":"✅ Conexión exitosa a la base de datos MySQL 🐬\n    - Host: r3nw3.h.filess.io\n    - Puerto: 3307\n    - Usuario: cnkceneka_intogoesso\n    - Base de datos: cnkceneka_intogoesso","timestamp":"2025-04-08T03:12:43.193Z"}
+{"level":"info","message":"📦 Versión del servidor MySQL: 8.0.36-28","timestamp":"2025-04-08T03:12:43.285Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:03:12:49 +0000] \"GET /api/properties/18 HTTP/1.1\" 200 1488 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T03:12:49.401Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:03:12:55 +0000] \"GET /api/properties?page=1&limit=4 HTTP/1.1\" 200 3200 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T03:12:55.120Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-04-08T03:14:50.669Z"}
+{"level":"info","message":"API Documentation available at http://localhost:3000/api-docs","timestamp":"2025-04-08T03:14:50.671Z"}
+{"level":"info","message":"✅ Conexión exitosa a la base de datos MySQL 🐬\n    - Host: r3nw3.h.filess.io\n    - Puerto: 3307\n    - Usuario: cnkceneka_intogoesso\n    - Base de datos: cnkceneka_intogoesso","timestamp":"2025-04-08T03:14:51.543Z"}
+{"level":"info","message":"📦 Versión del servidor MySQL: 8.0.36-28","timestamp":"2025-04-08T03:14:51.625Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:03:14:57 +0000] \"GET /api/properties?page=1&limit=4 HTTP/1.1\" 200 3200 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T03:14:57.294Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:03:15:01 +0000] \"GET /api/properties/18 HTTP/1.1\" 200 1658 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T03:15:01.567Z"}
+{"level":"info","message":"::1 - - [08/Apr/2025:03:15:09 +0000] \"GET /api/properties/19 HTTP/1.1\" 200 1509 \"-\" \"PostmanRuntime/7.43.2\"","timestamp":"2025-04-08T03:15:09.199Z"}

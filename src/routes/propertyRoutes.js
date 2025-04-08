@@ -71,6 +71,7 @@ router.get('/catalogs/property-types', catalogController.getPropertyTypes);
 router.get('/catalogs/sale-types', catalogController.getSaleTypes);
 router.get('/catalogs/legal-statuses', catalogController.getLegalStatuses);
 router.get('/catalogs/states', catalogController.getStates);
+router.get('/catalogs/features', catalogController.getAllFeatures);
 
 // Después van las rutas protegidas
 router.use(authenticate);
@@ -216,5 +217,9 @@ router.delete('/catalogs/sale-types/:id', catalogController.deleteSaleType);
 router.post('/catalogs/legal-statuses', catalogController.createLegalStatus);
 router.put('/catalogs/legal-statuses/:id', catalogController.updateLegalStatus);
 router.delete('/catalogs/legal-statuses/:id', catalogController.deleteLegalStatus);
+
+router.post('/catalogs/features',catalogController.createFeatures);
+router.put('/catalogs/features/:id', catalogController.updateFeature);
+router.delete('/catalogs/features/:id', catalogController.deleteFeature);
 
 module.exports = router;

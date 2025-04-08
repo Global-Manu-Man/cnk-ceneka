@@ -82,3 +82,6 @@
 {"level":"error","message":"Error al obtener las propiedades: Unknown column 'created_at' in 'field list'","timestamp":"2025-04-08T00:24:06.988Z"}
 {"level":"error","message":"Error al obtener las propiedades: read ECONNRESET","timestamp":"2025-04-08T01:36:12.590Z"}
 {"level":"error","message":"Error al crear la propiedad: Column count doesn't match value count at row 1","timestamp":"2025-04-08T02:28:46.555Z"}
+{"level":"error","message":"Error al crear características: Cannot add or update a child row: a foreign key constraint fails (`cnkceneka_intogoesso`.`property_features`, CONSTRAINT `property_features_ibfk_1` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`))","timestamp":"2025-04-08T02:57:12.278Z"}
+{"level":"error","message":"Error al crear características: Cannot add or update a child row: a foreign key constraint fails (`cnkceneka_intogoesso`.`property_features`, CONSTRAINT `property_features_ibfk_1` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`))","timestamp":"2025-04-08T02:58:42.849Z"}
+{"level":"error","message":"Error al crear características: Cannot add or update a child row: a foreign key constraint fails (`cnkceneka_intogoesso`.`property_features`, CONSTRAINT `property_features_ibfk_1` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`))","timestamp":"2025-04-08T02:59:19.316Z"}
