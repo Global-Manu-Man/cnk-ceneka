@@ -51,92 +51,28 @@ router.get('/', getAllProperties);
  */
 router.get('/:id', getPropertyById);
 
-/**
- * @swagger
- * /properties/catalogs/property-types:
- *   get:
- *     tags: [Catálogos]
- *     summary: Obtener tipos de propiedad
- *     responses:
- *       200:
- *         description: Lista de tipos de propiedad
- */
-router.get('/properties/catalogs/property-types', catalogController.getPropertyTypes);
+
+router.get('/catalogs/property-types', catalogController.getPropertyTypes);
 
 
-/**
- * @swagger
- * /catalogs/sale-types:
- *   get:
- *     tags: [Catálogos]
- *     summary: Obtener tipos de venta
- *     responses:
- *       200:
- *         description: Lista de tipos de venta
- */
 router.get('/catalogs/sale-types', catalogController.getSaleTypes);
 
-/**
- * @swagger
- * /catalogs/legal-statuses:
- *   get:
- *     tags: [Catálogos]
- *     summary: Obtener estatus legales
- *     responses:
- *       200:
- *         description: Lista de estatus legales
- */
+
 router.get('/catalogs/legal-statuses', catalogController.getLegalStatuses);
 
-/**
- * @swagger
- * /catalogs/states:
- *   get:
- *     tags: [Catálogos]
- *     summary: Obtener estados
- *     responses:
- *       200:
- *         description: Lista de estados
- */
 router.get('/catalogs/states', catalogController.getStates);
 
-/**
- * @swagger
- * /catalogs/municipalities:
- *   get:
- *     tags: [Catálogos]
- *     summary: Obtener municipios por estado
- *     parameters:
- *       - name: state_id
- *         in: query
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Lista de municipios
- */
 router.get('/catalogs/municipalities', catalogController.getMunicipalitiesByState);
 
-/**
- * @swagger
- * /catalogs/colonies:
- *   get:
- *     tags: [Catálogos]
- *     summary: Obtener colonias por municipio
- *     parameters:
- *       - name: municipality_id
- *         in: query
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Lista de colonias
- */
 router.get('/catalogs/colonies', catalogController.getColoniesByMunicipality);
 
-// --- RUTAS PROTEGIDAS ---
+// Rutas de catálogos públicas
+router.get('/catalogs/property-types', catalogController.getPropertyTypes);
+router.get('/catalogs/sale-types', catalogController.getSaleTypes);
+router.get('/catalogs/legal-statuses', catalogController.getLegalStatuses);
+router.get('/catalogs/states', catalogController.getStates);
+
+// Después van las rutas protegidas
 router.use(authenticate);
 
 /**
@@ -268,209 +204,17 @@ router.put('/:id', updateProperty);
  */
 router.delete('/:id', deleteProperty);
 
-// Las rutas protegidas de catálogos puedes seguir el mismo patrón agregando documentación para POST, PUT y DELETE.
-
-// ... (el resto del archivo hasta las rutas protegidas se mantiene igual)
-
-// Rutas protegidas - administración de catálogos
-
-/**
- * @swagger
- * /catalogs/property-types:
- *   post:
- *     tags: [Catálogos]
- *     summary: Crear un tipo de propiedad
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               descripcion:
- *                 type: string
- *     responses:
- *       201:
- *         description: Tipo de propiedad creado
- */
+// Rutas protegidas de catálogos
 router.post('/catalogs/property-types', catalogController.createPropertyType);
-
-/**
- * @swagger
- * /catalogs/property-types/{id}:
- *   put:
- *     tags: [Catálogos]
- *     summary: Actualizar tipo de propiedad
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               descripcion:
- *                 type: string
- *     responses:
- *       200:
- *         description: Tipo de propiedad actualizado
- */
 router.put('/catalogs/property-types/:id', catalogController.updatePropertyType);
-
-/**
- * @swagger
- * /catalogs/property-types/{id}:
- *   delete:
- *     tags: [Catálogos]
- *     summary: Eliminar tipo de propiedad
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Tipo de propiedad eliminado
- */
 router.delete('/catalogs/property-types/:id', catalogController.deletePropertyType);
 
-/**
- * @swagger
- * /catalogs/sale-types:
- *   post:
- *     tags: [Catálogos]
- *     summary: Crear tipo de venta
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               descripcion:
- *                 type: string
- *     responses:
- *       201:
- *         description: Tipo de venta creado
- */
 router.post('/catalogs/sale-types', catalogController.createSaleType);
-
-/**
- * @swagger
- * /catalogs/sale-types/{id}:
- *   put:
- *     tags: [Catálogos]
- *     summary: Actualizar tipo de venta
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               descripcion:
- *                 type: string
- *     responses:
- *       200:
- *         description: Tipo de venta actualizado
- */
 router.put('/catalogs/sale-types/:id', catalogController.updateSaleType);
-
-/**
- * @swagger
- * /catalogs/sale-types/{id}:
- *   delete:
- *     tags: [Catálogos]
- *     summary: Eliminar tipo de venta
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Tipo de venta eliminado
- */
 router.delete('/catalogs/sale-types/:id', catalogController.deleteSaleType);
 
-/**
- * @swagger
- * /catalogs/legal-statuses:
- *   post:
- *     tags: [Catálogos]
- *     summary: Crear estatus legal
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               descripcion:
- *                 type: string
- *     responses:
- *       201:
- *         description: Estatus legal creado
- */
 router.post('/catalogs/legal-statuses', catalogController.createLegalStatus);
-
-/**
- * @swagger
- * /catalogs/legal-statuses/{id}:
- *   put:
- *     tags: [Catálogos]
- *     summary: Actualizar estatus legal
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               descripcion:
- *                 type: string
- *     responses:
- *       200:
- *         description: Estatus legal actualizado
- */
 router.put('/catalogs/legal-statuses/:id', catalogController.updateLegalStatus);
-
-/**
- * @swagger
- * /catalogs/legal-statuses/{id}:
- *   delete:
- *     tags: [Catálogos]
- *     summary: Eliminar estatus legal
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Estatus legal eliminado
- */
 router.delete('/catalogs/legal-statuses/:id', catalogController.deleteLegalStatus);
-
 
 module.exports = router;

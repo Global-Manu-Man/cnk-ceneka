@@ -52,3 +52,6 @@
 {"level":"error","message":"❌ Error conectando a la base de datos: User 'cnkceneka_intogoesso' has exceeded the 'max_user_connections' resource (current value: 10)","timestamp":"2025-04-07T03:56:33.282Z"}
 {"level":"error","message":"❌ Error conectando a la base de datos: User 'cnkceneka_intogoesso' has exceeded the 'max_user_connections' resource (current value: 10)","timestamp":"2025-04-07T03:57:06.148Z"}
 {"level":"error","message":"❌ Error conectando a la base de datos: User 'cnkceneka_intogoesso' has exceeded the 'max_user_connections' resource (current value: 10)","timestamp":"2025-04-07T03:58:25.571Z"}
+{"level":"error","message":"Error al obtener las propiedades: read ECONNRESET","timestamp":"2025-04-07T22:55:02.883Z"}
+{"level":"error","message":"Error al obtener las propiedades: read ECONNRESET","timestamp":"2025-04-07T23:04:49.611Z"}
+{"level":"error","message":"Error al obtener tipos de venta: read ECONNRESET","timestamp":"2025-04-07T23:59:48.652Z"}
