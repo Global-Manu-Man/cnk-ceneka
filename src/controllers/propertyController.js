@@ -59,7 +59,6 @@ const validateAndTransformPropertyData = (data) => {
     additional_info: 'string',
     title: 'string',
     description: 'string',
-    main_image: 'string',
     state_id: 'number',
     municipality_id: 'number',
     colony_id: 'number'
@@ -78,7 +77,7 @@ const validateAndTransformPropertyData = (data) => {
       'legal_status_id', 'sale_value', 'commercial_value', 'street', 
       'exterior_number', 'postal_code', 'land_size', 'construction_size',
       'bedrooms', 'bathrooms', 'parking_spaces', 'title', 'description',
-      'main_image', 'state_id', 'municipality_id', 'colony_id'
+      'state_id', 'municipality_id', 'colony_id'
     ].includes(field)) {
       if (value === null) {
         missingFields.push(field);
@@ -104,70 +103,283 @@ const validateAndTransformPropertyData = (data) => {
   return cleanedData;
 };
 
+
+
 const getAllProperties = async (req, res, next) => {
   try {
-    const [properties] = await pool.execute('SELECT * FROM properties');
-    res.json({ success: true, data: properties });
+    // Parámetros de paginación
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    // 1. Obtener total de registros
+    const [countResult] = await pool.query('SELECT COUNT(*) AS total FROM properties');
+    const total = countResult[0].total;
+    const totalPages = Math.ceil(total / limit);
+
+    // 2. Obtener propiedades paginadas
+    const [properties] = await pool.query(
+      `SELECT 
+        id, client, property_code, property_type_id, sale_type_id, legal_status_id,
+        sale_value, commercial_value, street, exterior_number, interior_number,
+        postal_code, extra_address, observation_id, land_size, construction_size,
+        bedrooms, bathrooms, parking_spaces, has_garden, has_study,
+        has_service_room, is_condominium, additional_info, title, description,
+        state_id, municipality_id, colony_id
+      FROM properties 
+      ORDER BY id DESC 
+      LIMIT ? OFFSET ?`,
+      [limit, offset]
+    );
+
+    // 3. Si no hay resultados
+    if (!properties.length) {
+      return res.status(200).json({
+        success: true,
+        data: [],
+        pagination: {
+          page,
+          limit,
+          total,
+          pages: totalPages
+        },
+        message: "No hay más resultados disponibles"
+      });
+    }
+
+    // 4. Obtener IDs de propiedades
+    const propertyIds = properties.map(p => p.id);
+
+    // 5. Obtener todas las imágenes relacionadas con esas propiedades
+    const placeholders = propertyIds.map(() => '?').join(', ');
+    const [imageResults] = await pool.query(
+      `SELECT property_id, id AS image_id, image_url 
+       FROM property_images 
+       WHERE property_id IN (${placeholders})`,
+      propertyIds
+    );
+
+    // 6. Agrupar imágenes en cada propiedad
+    const enrichedProperties = properties.map(property => {
+      const images = imageResults
+        .filter(img => img.property_id === property.id)
+        .map(img => ({
+          id: img.image_id,
+          url: img.image_url
+        }));
+
+      return {
+        ...property,
+        images
+      };
+    });
+
+    // 7. Respuesta final
+    return res.status(200).json({
+      success: true,
+      data: enrichedProperties,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: totalPages
+      }
+    });
+
   } catch (error) {
     logger.error(`Error al obtener las propiedades: ${error.message}`);
     next(new ApiError(500, 'Error al obtener las propiedades'));
   }
 };
 
+
+
 const getPropertyById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const [properties] = await pool.execute('SELECT * FROM properties WHERE id = ?', [id]);
+
+    // Obtener la propiedad sin el campo main_image
+    const [properties] = await pool.execute(`
+      SELECT 
+        id, client, property_code, property_type_id, sale_type_id, legal_status_id,
+        sale_value, commercial_value, street, exterior_number, interior_number,
+        postal_code, extra_address, observation_id, land_size, construction_size,
+        bedrooms, bathrooms, parking_spaces, has_garden, has_study,
+        has_service_room, is_condominium, additional_info, title, description,
+        state_id, municipality_id, colony_id
+      FROM properties
+      WHERE id = ?
+    `, [id]);
 
     if (properties.length === 0) {
       return next(new ApiError(404, 'Propiedad no encontrada'));
     }
 
-    res.json({ success: true, data: properties[0] });
+    const property = properties[0];
+
+    // Obtener imágenes relacionadas
+    const [images] = await pool.execute(
+      'SELECT id AS image_id, image_url FROM property_images WHERE property_id = ?',
+      [id]
+    );
+
+    const imageList = images.map(img => ({ id: img.image_id, url: img.image_url }));
+
+    res.json({
+      success: true,
+      data: {
+        ...property,
+        images: imageList
+      }
+    });
   } catch (error) {
     logger.error(`Error al obtener la propiedad: ${error.message}`);
     next(new ApiError(500, 'Error al obtener la propiedad'));
   }
 };
 
+
+
 const createProperty = async (req, res, next) => {
   try {
     logger.info('Iniciando creación de propiedad');
-    logger.info('Headers recibidos:', req.headers);
     logger.info('Body recibido:', JSON.stringify(req.body, null, 2));
 
     if (!req.body || Object.keys(req.body).length === 0) {
       throw new ApiError(400, 'No se recibieron datos para crear la propiedad');
     }
 
-    const propertyData = validateAndTransformPropertyData(req.body);
-    logger.info('Datos de propiedad procesados:', JSON.stringify(propertyData, null, 2));
+    // =========================
+    // Validar imágenes (mínimo 10) y definir portada
+    // =========================
+    if (!Array.isArray(req.body.images) || req.body.images.length < 10) {
+      throw new ApiError(400, 'Debes proporcionar al menos 10 imágenes para registrar la propiedad');
+    }
 
-    const query = `
+    const portada = req.body.images[0]; // La primera imagen será la portada
+
+    // 🔁 Renombrar campos esperados desde el frontend
+    const transformedInput = {
+      ...req.body,
+      sale_value: req.body.price,
+      construction_size: req.body.sqft
+    };
+
+    logger.info('Input transformado:', JSON.stringify(transformedInput, null, 2));
+
+    // Validar campos requeridos y transformar el objeto
+    const propertyData = validateAndTransformPropertyData(transformedInput);
+
+    logger.info('Datos listos para insertar:', JSON.stringify(propertyData, null, 2));
+
+    // Insertar en la tabla 'properties'
+    const insertPropertyQuery = `
       INSERT INTO properties (
         client, property_code, property_type_id, sale_type_id, legal_status_id,
         sale_value, commercial_value, street, exterior_number, interior_number,
         postal_code, extra_address, observation_id, land_size, construction_size,
         bedrooms, bathrooms, parking_spaces, has_garden, has_study,
         has_service_room, is_condominium, additional_info, title, description,
-        main_image, state_id, municipality_id, colony_id
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        state_id, municipality_id, colony_id
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-
     const values = Object.values(propertyData);
-    const [result] = await pool.execute(query, values);
-    logger.info('Propiedad creada exitosamente:', result);
+    const [result] = await pool.execute(insertPropertyQuery, values);
+    const propertyId = result.insertId;
+
+    // =========================
+    // Guardar features
+    // =========================
+    if (Array.isArray(req.body.features)) {
+      const featureInsertQuery = 'INSERT INTO property_features (property_id, feature) VALUES (?, ?)';
+      for (const feature of req.body.features) {
+        await pool.execute(featureInsertQuery, [propertyId, feature]);
+      }
+    }
+
+    // =========================
+    // Guardar imágenes adicionales
+    // =========================
+    const imageInsertQuery = 'INSERT INTO property_images (property_id, image_url) VALUES (?, ?)';
+    for (const imageUrl of req.body.images) {
+      await pool.execute(imageInsertQuery, [propertyId, imageUrl]);
+    }
+
+    // =========================
+    // Recuperar la propiedad creada con JOINs
+    // =========================
+    const [propertyRows] = await pool.execute(`
+      SELECT 
+        p.*, 
+        pt.descripcion AS property_type, 
+        st.descripcion AS sale_type, 
+        ls.descripcion AS legal_status, 
+        s.name AS state, 
+        m.name AS municipality, 
+        c.name AS colony
+      FROM properties p
+      LEFT JOIN property_type pt ON p.property_type_id = pt.id
+      LEFT JOIN sale_type st ON p.sale_type_id = st.id
+      LEFT JOIN legal_status ls ON p.legal_status_id = ls.id
+      LEFT JOIN states s ON p.state_id = s.id
+      LEFT JOIN municipalities m ON p.municipality_id = m.id
+      LEFT JOIN colonies c ON p.colony_id = c.id
+      WHERE p.id = ?
+    `, [propertyId]);
+
+    const property = propertyRows[0];
+
+    // Obtener features
+    const [featuresRows] = await pool.execute(
+      'SELECT feature FROM property_features WHERE property_id = ?', [propertyId]
+    );
+    const features = featuresRows.map(f => f.feature);
+
+    // Obtener imágenes adicionales
+    const [imageRows] = await pool.execute(
+      'SELECT image_url FROM property_images WHERE property_id = ?', [propertyId]
+    );
+    const images = imageRows.map(img => img.image_url);
+
+    // Armar la respuesta final para el frontend
+    const formatted = {
+      id: property.id,
+      title: property.title,
+      price: `$${parseFloat(property.sale_value).toLocaleString('es-MX')}`,
+      beds: property.bedrooms,
+      baths: property.bathrooms,
+      sqft: property.construction_size,
+      description: property.description,
+      features,
+      location: `${property.colony}, ${property.municipality}, ${property.state}`,
+      images,
+      propertyType: property.property_type,
+      saleType: property.sale_type,
+      legalStatus: property.legal_status,
+      commercialValue: `$${parseFloat(property.commercial_value).toLocaleString('es-MX')}`,
+      state: property.state,
+      municipality: property.municipality,
+      colony: property.colony,
+      street: property.street,
+      landSize: property.land_size,
+      constructionSize: property.construction_size,
+      hasGarden: !!property.has_garden,
+      hasStudy: !!property.has_study,
+      hasServiceRoom: !!property.has_service_room,
+      hasCondominium: !!property.is_condominium
+    };
 
     res.status(201).json({
       success: true,
       message: 'Propiedad creada exitosamente',
-      data: { propertyId: result.insertId }
+      data: formatted
     });
   } catch (error) {
     logger.error(`Error al crear la propiedad: ${error.message}`);
     next(error instanceof ApiError ? error : new ApiError(500, 'Error al crear la propiedad'));
   }
 };
+
 
 const updateProperty = async (req, res, next) => {
   try {

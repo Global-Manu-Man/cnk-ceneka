@@ -55,3 +55,30 @@
 {"level":"error","message":"Error al obtener las propiedades: read ECONNRESET","timestamp":"2025-04-07T22:55:02.883Z"}
 {"level":"error","message":"Error al obtener las propiedades: read ECONNRESET","timestamp":"2025-04-07T23:04:49.611Z"}
 {"level":"error","message":"Error al obtener tipos de venta: read ECONNRESET","timestamp":"2025-04-07T23:59:48.652Z"}
+{"level":"error","message":"Error al crear la propiedad: Campos requeridos faltantes: sale_value, construction_size, main_image","timestamp":"2025-04-07T22:03:52.978Z"}
+{"level":"error","message":"Error al obtener tipos de propiedad: read ECONNRESET","timestamp":"2025-04-07T22:38:27.876Z"}
+{"level":"error","message":"Error al crear la propiedad: Cannot add or update a child row: a foreign key constraint fails (`cnkceneka_intogoesso`.`properties`, CONSTRAINT `properties_ibfk_3` FOREIGN KEY (`legal_status_id`) REFERENCES `legal_status` (`id`))","timestamp":"2025-04-07T23:28:55.201Z"}
+{"level":"error","message":"Error al crear la propiedad: Cannot add or update a child row: a foreign key constraint fails (`cnkceneka_intogoesso`.`properties`, CONSTRAINT `properties_ibfk_3` FOREIGN KEY (`legal_status_id`) REFERENCES `legal_status` (`id`))","timestamp":"2025-04-07T23:29:08.134Z"}
+{"level":"error","message":"Error al crear la propiedad: Cannot add or update a child row: a foreign key constraint fails (`cnkceneka_intogoesso`.`properties`, CONSTRAINT `properties_ibfk_3` FOREIGN KEY (`legal_status_id`) REFERENCES `legal_status` (`id`))","timestamp":"2025-04-07T23:29:36.947Z"}
+{"level":"error","message":"Error al crear la propiedad: Cannot add or update a child row: a foreign key constraint fails (`cnkceneka_intogoesso`.`properties`, CONSTRAINT `properties_ibfk_3` FOREIGN KEY (`legal_status_id`) REFERENCES `legal_status` (`id`))","timestamp":"2025-04-07T23:31:04.766Z"}
+{"level":"error","message":"Error al obtener las propiedades: read ECONNRESET","timestamp":"2025-04-07T23:55:20.361Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:06:39.220Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:06:42.218Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:07:01.927Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:08:18.095Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:08:43.230Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:08:48.661Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:09:08.008Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:09:22.994Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:09:34.114Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:10:33.578Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:10:39.646Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:11:23.349Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:12:26.612Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:15:02.340Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:16:40.881Z"}
+{"level":"error","message":"Error al obtener las propiedades: Incorrect arguments to mysqld_stmt_execute","timestamp":"2025-04-08T00:19:00.338Z"}
+{"level":"error","message":"Error al obtener las propiedades: Unknown column 'created_at' in 'field list'","timestamp":"2025-04-08T00:23:59.917Z"}
+{"level":"error","message":"Error al obtener las propiedades: Unknown column 'created_at' in 'field list'","timestamp":"2025-04-08T00:24:06.988Z"}
+{"level":"error","message":"Error al obtener las propiedades: read ECONNRESET","timestamp":"2025-04-08T01:36:12.590Z"}
+{"level":"error","message":"Error al crear la propiedad: Column count doesn't match value count at row 1","timestamp":"2025-04-08T02:28:46.555Z"}
