@@ -61,7 +61,11 @@ const validateAndTransformPropertyData = (data) => {
     description: 'string',
     state_id: 'number',
     municipality_id: 'number',
-    colony_id: 'number'
+    colony_id: 'number',
+    state: 'string',
+    municipality: 'string',
+    colony: 'string',
+
   };
 
   const cleanedData = {};
@@ -77,7 +81,7 @@ const validateAndTransformPropertyData = (data) => {
       'legal_status_id', 'sale_value', 'commercial_value', 'street', 
       'exterior_number', 'postal_code', 'land_size', 'construction_size',
       'bedrooms', 'bathrooms', 'parking_spaces', 'title', 'description',
-      'state_id', 'municipality_id', 'colony_id'
+      'state_id', 'municipality_id', 'colony_id', 'state', 'municipality', 'colony'
     ].includes(field)) {
       if (value === null) {
         missingFields.push(field);
@@ -122,7 +126,7 @@ const getAllProperties = async (req, res, next) => {
         postal_code, extra_address, observation_id, land_size, construction_size,
         bedrooms, bathrooms, parking_spaces, has_garden, has_study,
         has_service_room, is_condominium, additional_info, title, description,
-        state_id, municipality_id, colony_id
+        state, municipality, colony
       FROM properties 
       ORDER BY id DESC 
       LIMIT ? OFFSET ?`,
@@ -214,7 +218,7 @@ const getPropertyById = async (req, res, next) => {
         postal_code, extra_address, observation_id, land_size, construction_size,
         bedrooms, bathrooms, parking_spaces, has_garden, has_study,
         has_service_room, is_condominium, additional_info, title, description,
-        state_id, municipality_id, colony_id
+        state, municipality, colony
       FROM properties
       WHERE id = ?
     `, [id]);
@@ -284,7 +288,10 @@ const createProperty = async (req, res, next) => {
     const transformedInput = {
       ...req.body,
       sale_value: req.body.price,
-      construction_size: req.body.sqft
+      construction_size: req.body.sqft,
+      state: req.body.state,
+      municipality: req.body.municipality,
+      colony: req.body.colony
     };
 
     logger.info('Input transformado:', JSON.stringify(transformedInput, null, 2));
@@ -294,17 +301,25 @@ const createProperty = async (req, res, next) => {
 
     logger.info('Datos listos para insertar:', JSON.stringify(propertyData, null, 2));
 
+    // DEBUG: Verifica que haya 31 valores
+    console.log('propertyData:', propertyData);
+    //console.log('Valores a insertar:', Object.values(propertyData));
+    console.log('Total de valores:', Object.values(propertyData).length);
+
     // Insertar en la tabla 'properties'
     const insertPropertyQuery = `
-      INSERT INTO properties (
-        client, property_code, property_type_id, sale_type_id, legal_status_id,
-        sale_value, commercial_value, street, exterior_number, interior_number,
-        postal_code, extra_address, observation_id, land_size, construction_size,
-        bedrooms, bathrooms, parking_spaces, has_garden, has_study,
-        has_service_room, is_condominium, additional_info, title, description,
-        state_id, municipality_id, colony_id
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+  INSERT INTO properties (
+    client, property_code, property_type_id, sale_type_id, legal_status_id,
+    sale_value, commercial_value, street, exterior_number, interior_number,
+    postal_code, extra_address, observation_id, land_size, construction_size,
+    bedrooms, bathrooms, parking_spaces, has_garden, has_study,
+    has_service_room, is_condominium, additional_info, title, description,
+    state_id, municipality_id, colony_id,
+    state, municipality, colony
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
+
+  
     const values = Object.values(propertyData);
     const [result] = await pool.execute(insertPropertyQuery, values);
     const propertyId = result.insertId;
