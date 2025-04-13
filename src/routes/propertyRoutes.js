@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/auth');
+const { getInformationAddress } = require('../controllers/Dipomex.controller');
 const {
   getAllProperties,
   getPropertyById,
@@ -221,5 +222,7 @@ router.delete('/catalogs/legal-statuses/:id', catalogController.deleteLegalStatu
 router.post('/catalogs/features',catalogController.createFeatures);
 router.put('/catalogs/features/:id', catalogController.updateFeature);
 router.delete('/catalogs/features/:id', catalogController.deleteFeature);
+
+router.post('/catalogs/postal_code/:codigo_postal', getInformationAddress);
 
 module.exports = router;
