@@ -11,6 +11,7 @@ const { logger } = require('./utils/logger');
 const { initializeFirebase } = require('./config/firebase');
 const { checkDatabaseConnection } = require('./config/database');
 
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 

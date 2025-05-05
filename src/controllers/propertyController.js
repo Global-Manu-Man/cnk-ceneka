@@ -278,11 +278,21 @@ const createProperty = async (req, res, next) => {
     // =========================
     // Validar imágenes (mínimo 10) y definir portada
     // =========================
-    if (!Array.isArray(req.body.images) || req.body.images.length < 10) {
+    // if (!Array.isArray(req.body.images) || req.body.images.length < 10) {
+    //   throw new ApiError(400, 'Debes proporcionar al menos 10 imágenes para registrar la propiedad');
+    // }
+//RAFI
+    if (!req.files || req.files.length < 10) {
       throw new ApiError(400, 'Debes proporcionar al menos 10 imágenes para registrar la propiedad');
     }
+    
+    const imageUrls = req.files.map(file => file.path);
+    const portada = imageUrls[0]; 
+    
+//RAFI
 
-    const portada = req.body.images[0]; // La primera imagen será la portada
+
+    // const portada = req.body.images[0]; // La primera imagen será la portada
 
     // 🔁 Renombrar campos esperados desde el frontend
     const transformedInput = {
@@ -338,9 +348,16 @@ const createProperty = async (req, res, next) => {
     // Guardar imágenes adicionales
     // =========================
     const imageInsertQuery = 'INSERT INTO property_images (property_id, image_url) VALUES (?, ?)';
-    for (const imageUrl of req.body.images) {
+
+    //RAFI
+    for (const imageUrl of imageUrls) {
       await pool.execute(imageInsertQuery, [propertyId, imageUrl]);
     }
+    //RAFI
+
+    // for (const imageUrl of req.body.images) {
+    //   await pool.execute(imageInsertQuery, [propertyId, imageUrl]);
+    // }
 
     // =========================
     // Recuperar la propiedad creada con JOINs
