@@ -278,21 +278,23 @@ const createProperty = async (req, res, next) => {
     // =========================
     // Validar imágenes (mínimo 10) y definir portada
     // =========================
-    // if (!Array.isArray(req.body.images) || req.body.images.length < 10) {
-    //   throw new ApiError(400, 'Debes proporcionar al menos 10 imágenes para registrar la propiedad');
-    // }
-//RAFI
-    if (!req.files || req.files.length < 10) {
+    let imageUrls = [];
+    
+    // Si hay archivos subidos
+    if (req.files && req.files.length > 0) {
+      imageUrls = req.files.map(file => file.path);
+    } 
+    // Si hay URLs en el body
+    else if (Array.isArray(req.body.images) && req.body.images.length > 0) {
+      imageUrls = req.body.images;
+    }
+
+    // Validar que haya al menos 10 imágenes
+    if (imageUrls.length < 10) {
       throw new ApiError(400, 'Debes proporcionar al menos 10 imágenes para registrar la propiedad');
     }
     
-    const imageUrls = req.files.map(file => file.path);
-    const portada = imageUrls[0]; 
-    
-//RAFI
-
-
-    // const portada = req.body.images[0]; // La primera imagen será la portada
+    const portada = imageUrls[0]; // La primera imagen será la portada
 
     // 🔁 Renombrar campos esperados desde el frontend
     const transformedInput = {
