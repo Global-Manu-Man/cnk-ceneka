@@ -76,7 +76,7 @@ router.get('/catalogs/states', catalogController.getStates);
 router.get('/catalogs/features', catalogController.getAllFeatures);
 
 // Después van las rutas protegidas
-//router.use(authenticate);
+router.use(authenticate);
 
 /**
  * @swagger
