@@ -59,9 +59,6 @@ const validateAndTransformPropertyData = (data) => {
     additional_info: 'string',
     title: 'string',
     description: 'string',
-    state_id: 'number',
-    municipality_id: 'number',
-    colony_id: 'number',
     state: 'string',
     municipality: 'string',
     colony: 'string',
@@ -81,7 +78,7 @@ const validateAndTransformPropertyData = (data) => {
       'legal_status_id', 'sale_value', 'commercial_value', 'street', 
       'exterior_number', 'postal_code', 'land_size', 'construction_size',
       'bedrooms', 'bathrooms', 'parking_spaces', 'title', 'description',
-      'state_id', 'municipality_id', 'colony_id', 'state', 'municipality', 'colony'
+      'state', 'municipality', 'colony'
     ].includes(field)) {
       if (value === null) {
         missingFields.push(field);
@@ -278,11 +275,11 @@ const createProperty = async (req, res, next) => {
     // =========================
     // Validar imágenes (mínimo 10) y definir portada
     // =========================
-    if (!Array.isArray(req.body.images) || req.body.images.length < 10) {
+    if (!Array.isArray(req.files) || req.files.length < 10) {
       throw new ApiError(400, 'Debes proporcionar al menos 10 imágenes para registrar la propiedad');
     }
 
-    const portada = req.body.images[0]; // La primera imagen será la portada
+    const portada = req.files[0]; // La primera imagen será la portada
 
     // 🔁 Renombrar campos esperados desde el frontend
     const transformedInput = {
@@ -314,9 +311,8 @@ const createProperty = async (req, res, next) => {
     postal_code, extra_address, observation_id, land_size, construction_size,
     bedrooms, bathrooms, parking_spaces, has_garden, has_study,
     has_service_room, is_condominium, additional_info, title, description,
-    state_id, municipality_id, colony_id,
     state, municipality, colony
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
 
   
@@ -337,8 +333,9 @@ const createProperty = async (req, res, next) => {
     // =========================
     // Guardar imágenes adicionales
     // =========================
+    const imagePaths = req.files.map(file => file.path);
     const imageInsertQuery = 'INSERT INTO property_images (property_id, image_url) VALUES (?, ?)';
-    for (const imageUrl of req.body.images) {
+    for (const imageUrl of imagePaths) {
       await pool.execute(imageInsertQuery, [propertyId, imageUrl]);
     }
 
@@ -350,17 +347,11 @@ const createProperty = async (req, res, next) => {
         p.*, 
         pt.descripcion AS property_type, 
         st.descripcion AS sale_type, 
-        ls.descripcion AS legal_status, 
-        s.name AS state, 
-        m.name AS municipality, 
-        c.name AS colony
+        ls.descripcion AS legal_status
       FROM properties p
       LEFT JOIN property_type pt ON p.property_type_id = pt.id
       LEFT JOIN sale_type st ON p.sale_type_id = st.id
       LEFT JOIN legal_status ls ON p.legal_status_id = ls.id
-      LEFT JOIN states s ON p.state_id = s.id
-      LEFT JOIN municipalities m ON p.municipality_id = m.id
-      LEFT JOIN colonies c ON p.colony_id = c.id
       WHERE p.id = ?
     `, [propertyId]);
 
