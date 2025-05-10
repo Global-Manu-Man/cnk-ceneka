@@ -275,6 +275,7 @@ const createProperty = async (req, res, next) => {
     // =========================
     // Validar imágenes (mínimo 10) y definir portada
     // =========================
+    console.log('req.files:', req.files);
     if (!Array.isArray(req.files) || req.files.length < 10) {
       throw new ApiError(400, 'Debes proporcionar al menos 10 imágenes para registrar la propiedad');
     }
