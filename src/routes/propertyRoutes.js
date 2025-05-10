@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/auth');
+const upload = require('../middleware/uploadMiddleware.js')
 const { getInformationAddress } = require('../controllers/Dipomex.controller');
 const {
   getAllProperties,
@@ -75,7 +76,7 @@ router.get('/catalogs/states', catalogController.getStates);
 router.get('/catalogs/features', catalogController.getAllFeatures);
 
 // Después van las rutas protegidas
-router.use(authenticate);
+//router.use(authenticate);
 
 /**
  * @swagger
@@ -125,7 +126,8 @@ router.use(authenticate);
  *       201:
  *         description: Propiedad creada
  */
-router.post('/', createProperty);
+//router.post('/', createProperty);
+router.post('/',upload.array('images', 20), createProperty);
 
 /**
  * @swagger
