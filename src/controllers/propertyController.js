@@ -413,43 +413,153 @@ const createProperty = async (req, res, next) => {
 const updateProperty = async (req, res, next) => {
   try {
     const { id } = req.params;
-
-    logger.info(`🔄 Intentando actualizar propiedad con ID: ${id}`);
-    logger.info('🧾 Body recibido para actualización:', JSON.stringify(req.body, null, 2));
+    logger.info(`🔄 Iniciando actualización de propiedad ID: ${id}`);
+    logger.info('Body recibido:', JSON.stringify(req.body, null, 2));
 
     if (!req.body || Object.keys(req.body).length === 0) {
       throw new ApiError(400, 'No se recibieron datos para actualizar la propiedad');
     }
 
-    // Validar y transformar datos
-    const propertyData = validateAndTransformPropertyData(req.body);
+    // =========================
+    // Validar imágenes si se envían
+    // =========================
+    if (req.files) {
+      console.log('Archivos recibidos:', req.files);
+      if (!Array.isArray(req.files) || req.files.length < 10) {
+        throw new ApiError(400, 'Debes proporcionar al menos 10 imágenes para actualizar la propiedad');
+      }
+    }
 
-    logger.info('🛠 Campos limpios para actualización:', JSON.stringify(propertyData, null, 2));
+    // 🔁 Renombrar campos esperados desde el frontend
+    const transformedInput = {
+      ...req.body,
+      sale_value: req.body.price,
+      construction_size: req.body.sqft,
+      state: req.body.state,
+      municipality: req.body.municipality,
+      colony: req.body.colony
+    };
 
-    // Verificar si existe la propiedad antes de intentar actualizar
+    logger.info('Input transformado:', JSON.stringify(transformedInput, null, 2));
+
+    // Validar campos requeridos y transformar el objeto
+    const propertyData = validateAndTransformPropertyData(transformedInput);
+
+    logger.info('Datos listos para actualizar:', JSON.stringify(propertyData, null, 2));
+
+    // Verificar si existe la propiedad antes de actualizar
     const [existing] = await pool.execute('SELECT id FROM properties WHERE id = ?', [id]);
     if (existing.length === 0) {
       return next(new ApiError(404, 'Propiedad no encontrada para actualizar'));
     }
 
+    // Construir la consulta de actualización dinámicamente
     const fields = Object.keys(propertyData).map(field => `${field} = ?`).join(', ');
     const values = Object.values(propertyData);
 
+    // Actualizar la propiedad
     const [result] = await pool.execute(
       `UPDATE properties SET ${fields} WHERE id = ?`,
       [...values, id]
     );
 
-    logger.info(`✅ Resultado del UPDATE: ${JSON.stringify(result)}`);
-
     if (result.affectedRows === 0) {
       return next(new ApiError(400, 'No se realizó ninguna actualización'));
     }
 
+    // =========================
+    // Actualizar features si se envían
+    // =========================
+    if (Array.isArray(req.body.features)) {
+      // Eliminar features existentes
+      await pool.execute('DELETE FROM property_features WHERE property_id = ?', [id]);
+      
+      // Insertar nuevos features
+      const featureInsertQuery = 'INSERT INTO property_features (property_id, feature) VALUES (?, ?)';
+      for (const feature of req.body.features) {
+        await pool.execute(featureInsertQuery, [id, feature]);
+      }
+    }
+
+    // =========================
+    // Actualizar imágenes si se envían
+    // =========================
+    if (req.files && req.files.length > 0) {
+      // Eliminar imágenes existentes
+      await pool.execute('DELETE FROM property_images WHERE property_id = ?', [id]);
+      
+      // Insertar nuevas imágenes
+      const imagePaths = req.files.map(file => file.path);
+      const imageInsertQuery = 'INSERT INTO property_images (property_id, image_url) VALUES (?, ?)';
+      for (const imageUrl of imagePaths) {
+        await pool.execute(imageInsertQuery, [id, imageUrl]);
+      }
+    }
+
+    // =========================
+    // Recuperar la propiedad actualizada con JOINs
+    // =========================
+    const [propertyRows] = await pool.execute(`
+      SELECT 
+        p.*, 
+        pt.descripcion AS property_type, 
+        st.descripcion AS sale_type, 
+        ls.descripcion AS legal_status
+      FROM properties p
+      LEFT JOIN property_type pt ON p.property_type_id = pt.id
+      LEFT JOIN sale_type st ON p.sale_type_id = st.id
+      LEFT JOIN legal_status ls ON p.legal_status_id = ls.id
+      WHERE p.id = ?
+    `, [id]);
+
+    const property = propertyRows[0];
+
+    // Obtener features actualizados
+    const [featuresRows] = await pool.execute(
+      'SELECT feature FROM property_features WHERE property_id = ?', [id]
+    );
+    const features = featuresRows.map(f => f.feature);
+
+    // Obtener imágenes actualizadas
+    const [imageRows] = await pool.execute(
+      'SELECT image_url FROM property_images WHERE property_id = ?', [id]
+    );
+    const images = imageRows.map(img => img.image_url);
+
+    // Formatear la respuesta
+    const formatted = {
+      id: property.id,
+      title: property.title,
+      price: `$${parseFloat(property.sale_value).toLocaleString('es-MX')}`,
+      beds: property.bedrooms,
+      baths: property.bathrooms,
+      sqft: property.construction_size,
+      description: property.description,
+      features,
+      location: `${property.colony}, ${property.municipality}, ${property.state}`,
+      images,
+      propertyType: property.property_type,
+      saleType: property.sale_type,
+      legalStatus: property.legal_status,
+      commercialValue: `$${parseFloat(property.commercial_value).toLocaleString('es-MX')}`,
+      state: property.state,
+      municipality: property.municipality,
+      colony: property.colony,
+      street: property.street,
+      landSize: property.land_size,
+      constructionSize: property.construction_size,
+      hasGarden: !!property.has_garden,
+      hasStudy: !!property.has_study,
+      hasServiceRoom: !!property.has_service_room,
+      hasCondominium: !!property.is_condominium
+    };
+
     res.json({
       success: true,
-      message: 'Propiedad actualizada exitosamente'
+      message: 'Propiedad actualizada exitosamente',
+      data: formatted
     });
+
   } catch (error) {
     logger.error(`❌ Error al actualizar la propiedad: ${error.message}`);
     next(error instanceof ApiError ? error : new ApiError(500, 'Error al actualizar la propiedad'));

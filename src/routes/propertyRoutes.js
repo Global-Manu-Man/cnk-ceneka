@@ -126,8 +126,8 @@ router.use(authenticate);
  *       201:
  *         description: Propiedad creada
  */
-//router.post('/', createProperty);
 router.post('/',upload.array('images', 20), createProperty);
+
 
 /**
  * @swagger
@@ -184,9 +184,7 @@ router.post('/',upload.array('images', 20), createProperty);
  *       200:
  *         description: Propiedad actualizada
  */
-
-
-router.put('/:id', updateProperty);
+router.put('/:id', upload.array('images', 20), updateProperty);
 
 /**
  * @swagger
