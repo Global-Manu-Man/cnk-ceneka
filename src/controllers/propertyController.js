@@ -273,11 +273,11 @@ const createProperty = async (req, res, next) => {
     }
 
     // =========================
-    // Validar imágenes (mínimo 10) y definir portada
+    // Validar imágenes (mínimo 1) y definir portada
     // =========================
     console.log('req.files:', req.files);
-    if (!Array.isArray(req.files) || req.files.length < 10) {
-      throw new ApiError(400, 'Debes proporcionar al menos 10 imágenes para registrar la propiedad');
+    if (!Array.isArray(req.files) || req.files.length === 0) {
+      throw new ApiError(400, 'Debes proporcionar al menos una imagen para registrar la propiedad');
     }
 
     const portada = req.files[0]; // La primera imagen será la portada
@@ -425,8 +425,8 @@ const updateProperty = async (req, res, next) => {
     // =========================
     if (req.files) {
       console.log('Archivos recibidos:', req.files);
-      if (!Array.isArray(req.files) || req.files.length < 10) {
-        throw new ApiError(400, 'Debes proporcionar al menos 10 imágenes para actualizar la propiedad');
+      if (!Array.isArray(req.files) || req.files.length === 0) {
+        throw new ApiError(400, 'Debes proporcionar al menos una imagen para actualizar la propiedad');
       }
     }
 
