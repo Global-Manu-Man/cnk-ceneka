@@ -76,8 +76,10 @@ router.get('/catalogs/legal-statuses', catalogController.getLegalStatuses);
 router.get('/catalogs/states', catalogController.getStates);
 router.get('/catalogs/features', catalogController.getAllFeatures);
 
+
 // Ruta para obtener imágenes de Cloudinary
 router.get('/cloudinary/images', cloudinaryController.getCloudinaryImages);
+
 
 // Después van las rutas protegidas
 router.use(authenticate);
