@@ -11,7 +11,7 @@ const {
   deleteProperty
 } = require('../controllers/propertyController');
 const catalogController = require('../controllers/catalogController');
-const cloudinaryController = require('../controllers/cloudinarycontroller');
+const cloudinaryController = require('../controllers/cloudinary.Controller.js');
 
 /**
  * @swagger
