@@ -10,6 +10,7 @@ const routes = require('./routes');
 const { logger } = require('./utils/logger');
 const { initializeFirebase } = require('./config/firebase');
 const { checkDatabaseConnection } = require('./config/database');
+const { handleNotFound } = require('./controllers/notFoundController');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -46,6 +47,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Routes
 app.use('/api', routes);
+
+// Manejo de rutas no encontradas para cualquier otra ruta
+app.all('*', handleNotFound);
 
 // Error handling
 app.use(errorHandler);
