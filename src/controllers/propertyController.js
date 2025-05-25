@@ -30,6 +30,7 @@ const validateAndTransformPropertyData = (data) => {
     has_study: false,
     has_service_room: false,
     is_condominium: false,
+    sale_status: null, // Valor por defecto para el nuevo campo
     ...data
   };
 
@@ -123,7 +124,8 @@ const getAllProperties = async (req, res, next) => {
         postal_code, extra_address, observation_id, land_size, construction_size,
         bedrooms, bathrooms, parking_spaces, has_garden, has_study,
         has_service_room, is_condominium, additional_info, title, description,
-        state, municipality, colony
+        state, municipality, colony,
+        sale_status
       FROM properties 
       ORDER BY id DESC 
       LIMIT ? OFFSET ?`,
@@ -215,7 +217,8 @@ const getPropertyById = async (req, res, next) => {
         postal_code, extra_address, observation_id, land_size, construction_size,
         bedrooms, bathrooms, parking_spaces, has_garden, has_study,
         has_service_room, is_condominium, additional_info, title, description,
-        state, municipality, colony
+        state, municipality, colony,
+        sale_status
       FROM properties
       WHERE id = ?
     `, [id]);
@@ -312,8 +315,8 @@ const createProperty = async (req, res, next) => {
     postal_code, extra_address, observation_id, land_size, construction_size,
     bedrooms, bathrooms, parking_spaces, has_garden, has_study,
     has_service_room, is_condominium, additional_info, title, description,
-    state, municipality, colony
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    state, municipality, colony, sale_status
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
 
   
@@ -379,6 +382,7 @@ const createProperty = async (req, res, next) => {
       baths: property.bathrooms,
       sqft: property.construction_size,
       description: property.description,
+      saleStatus: property.sale_status,
       features,
       location: `${property.colony}, ${property.municipality}, ${property.state}`,
       images,
