@@ -63,7 +63,8 @@ const validateAndTransformPropertyData = (data) => {
     state: 'string',
     municipality: 'string',
     colony: 'string',
-
+    sale_status: 'string',
+    
   };
 
   const cleanedData = {};
@@ -419,7 +420,10 @@ const updateProperty = async (req, res, next) => {
     const { id } = req.params;
     logger.info(`🔄 Iniciando actualización de propiedad ID: ${id}`);
     logger.info('Body recibido:', JSON.stringify(req.body, null, 2));
-
+    
+    // Log específico para sale_status
+    console.log('Valor recibido de sale_status:', req.body.sale_status);
+    
     if (!req.body || Object.keys(req.body).length === 0) {
       throw new ApiError(400, 'No se recibieron datos para actualizar la propiedad');
     }
@@ -539,6 +543,7 @@ const updateProperty = async (req, res, next) => {
       baths: property.bathrooms,
       sqft: property.construction_size,
       description: property.description,
+      
       features,
       location: `${property.colony}, ${property.municipality}, ${property.state}`,
       images,
@@ -555,8 +560,7 @@ const updateProperty = async (req, res, next) => {
       hasGarden: !!property.has_garden,
       hasStudy: !!property.has_study,
       hasServiceRoom: !!property.has_service_room,
-      hasCondominium: !!property.is_condominium,
-      saleStatus: property.sale_status // Agregamos el campo sale_status a la respuesta
+      hasCondominium: !!property.is_condominium
     };
 
     res.json({
