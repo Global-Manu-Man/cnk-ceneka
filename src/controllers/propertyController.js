@@ -555,7 +555,8 @@ const updateProperty = async (req, res, next) => {
       hasGarden: !!property.has_garden,
       hasStudy: !!property.has_study,
       hasServiceRoom: !!property.has_service_room,
-      hasCondominium: !!property.is_condominium
+      hasCondominium: !!property.is_condominium,
+      saleStatus: property.sale_status // Agregamos el campo sale_status a la respuesta
     };
 
     res.json({
