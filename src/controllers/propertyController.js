@@ -271,7 +271,8 @@ const createProperty = async (req, res, next) => {
   try {
     logger.info('Iniciando creación de propiedad');
     logger.info('Body recibido:', JSON.stringify(req.body, null, 2));
-
+    console.log('🧾 req.body completo:', req.body);
+    console.log('🟨 sale_status recibido:', req.body.sale_status);
     if (!req.body || Object.keys(req.body).length === 0) {
       throw new ApiError(400, 'No se recibieron datos para crear la propiedad');
     }
@@ -297,6 +298,12 @@ const createProperty = async (req, res, next) => {
     };
 
     logger.info('Input transformado:', JSON.stringify(transformedInput, null, 2));
+    
+    if (!transformedInput.sale_status && req.body.sale_status) {
+      console.log('⚠️ Ajustando manualmente sale_status desde req.body:', req.body.sale_status);
+      transformedInput.sale_status = req.body.sale_status;
+    }
+    
 
     // Validar campos requeridos y transformar el objeto
     const propertyData = validateAndTransformPropertyData(transformedInput);
@@ -383,7 +390,7 @@ const createProperty = async (req, res, next) => {
       baths: property.bathrooms,
       sqft: property.construction_size,
       description: property.description,
-      saleStatus: property.sale_status,
+      saleStatus: property.sale_status, // Agregar el campo saleStatus
       features,
       location: `${property.colony}, ${property.municipality}, ${property.state}`,
       images,
@@ -454,6 +461,7 @@ const updateProperty = async (req, res, next) => {
     const propertyData = validateAndTransformPropertyData(transformedInput);
 
     logger.info('Datos listos para actualizar:', JSON.stringify(propertyData, null, 2));
+    console.log('🧩 sale_status limpio:', propertyData.sale_status);
 
     // Verificar si existe la propiedad antes de actualizar
     const [existing] = await pool.execute('SELECT id FROM properties WHERE id = ?', [id]);
